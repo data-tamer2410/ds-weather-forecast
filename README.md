@@ -1,7 +1,7 @@
 # Weather Forecast API
 A Dockerized weather prediction API using an RNN model to forecast next-day conditions based on the past 7 days of weather data.
 
-## Descriprion
+## Description
 This project provides a weather prediction API using a recurrent neural network (RNN). The API predicts weather conditions for the next day based on the past 7 days of data. It has been containerized with Docker and deployed on a server, making it easily accessible via HTTP requests.
 
 ## Features
