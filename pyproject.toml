@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "weather_forecast"
+version = "0.1.0"
+description = ""
+authors = ["data-tamer2410 <vitaliy.dauneko2410@gmail.com>"]
+
+
+[tool.poetry.dependencies]
+python = "3.11.*"
+tensorflow = "2.17.1"
+uvicorn = "^0.34.0"
+fastapi = "^0.115.6"
+numpy = "1.*"
+pydantic = "^2.10.4"
+scikit-learn = "^1.6.0"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.10.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
