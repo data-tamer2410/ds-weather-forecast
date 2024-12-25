@@ -5,7 +5,7 @@ from keras.models import load_model
 from keras.losses import MeanSquaredError
 from fastapi import FastAPI
 from pydantic import BaseModel, conlist
-from typing import Union
+from typing import Union, Literal
 import numpy as np
 import pickle
 
@@ -26,11 +26,38 @@ target_names = [
 ]
 with open("weather_forecast/standard_scaler.pkl", "rb") as f:
     scaler = pickle.load(f)
+with open("weather_forecast/dir_encoder.pkl", "rb") as f:
+    dir_encoder = pickle.load(f)
 
 
 class InputData(BaseModel):
     data: conlist(
-        conlist(Union[float, int], min_length=17, max_length=17),
+        conlist(
+            Union[
+                float,
+                int,
+                Literal[
+                    "SW",
+                    "E",
+                    "N",
+                    "WNW",
+                    "SSE",
+                    "SE",
+                    "S",
+                    "WSW",
+                    "NNE",
+                    "NNW",
+                    "ENE",
+                    "SSW",
+                    "NW",
+                    "ESE",
+                    "NE",
+                    "W",
+                ],
+            ],
+            min_length=17,
+            max_length=17,
+        ),
         min_length=7,
         max_length=7,
     )
@@ -38,9 +65,10 @@ class InputData(BaseModel):
 
 def predicted(list_features: InputData) -> dict:
     """Predict the target values from the input features"""
-
     features = list_features.dict()["data"]
-    features = np.array(features, dtype="float32").reshape(1, -1)
+    features = np.array(features).reshape(1, -1)
+    features = np.vectorize(lambda x: dir_encoder.get(x, x))(features)
+    features = features.astype("float32")
     features = scaler.transform(features).reshape(1, 7, 17)
     res = {
         target_names[i]: float(v[0][0])
